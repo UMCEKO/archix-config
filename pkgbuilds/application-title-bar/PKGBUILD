@@ -1,0 +1,19 @@
+# Ported from nixpkgs' application-title-bar.
+
+pkgname=application-title-bar
+pkgver=0.10.0
+pkgrel=1
+pkgdesc='KDE Plasma 6 widget with window controls'
+arch=('any')
+url='https://github.com/antroids/application-title-bar'
+license=('GPL-3.0-or-later')
+depends=('plasma-workspace' 'kconfig')
+makedepends=('git')
+source=("git+$url.git#tag=v$pkgver")
+sha256sums=('SKIP')
+
+package() {
+  local dest="$pkgdir/usr/share/plasma/plasmoids/com.github.antroids.application-title-bar"
+  install -d "$dest"
+  cp -r "$srcdir/$pkgname/package/." "$dest/"
+}

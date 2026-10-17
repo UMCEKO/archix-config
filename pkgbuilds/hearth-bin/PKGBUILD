@@ -1,0 +1,24 @@
+# From hearth's own packaging/aur/PKGBUILD.in at v1.0.0; the NixOS config built the flake from source (rev 426463c, same day).
+
+pkgname=hearth-bin
+pkgver=1.0.0
+pkgrel=1
+pkgdesc='Custom Discord desktop app with Vencord preinstalled, forked from Vesktop'
+arch=('x86_64')
+url='https://github.com/hearthdesktop/hearth'
+license=('GPL-3.0-or-later')
+depends=('alsa-lib' 'gtk3' 'libglvnd' 'libnotify' 'libxss' 'libxtst' 'nss' 'xdg-utils')
+optdepends=('obs-vkcapture: share games through game capture'
+            'pipewire: screenshare audio')
+provides=('hearth')
+conflicts=('hearth')
+options=('!strip' '!debug')
+source=("$url/releases/download/v$pkgver/hearth_${pkgver}_amd64.deb")
+sha256sums=('cc4771b7acd8469d6f9388176fbfdf330ed194681e13253daae22aef346e0bff')
+
+package() {
+  bsdtar -xf data.tar.xz -C "$pkgdir"
+  rm -rf "$pkgdir/usr/share/doc"
+  install -d "$pkgdir/usr/bin"
+  ln -s /opt/Hearth/hearth "$pkgdir/usr/bin/hearth"
+}

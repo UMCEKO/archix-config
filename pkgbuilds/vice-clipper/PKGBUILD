@@ -1,0 +1,57 @@
+# Ported from the NixOS config's pkgs/vice-clipper.nix: pinned commit plus the clipboard-hang fix; the AUR package tracks releases without it.
+
+pkgname=vice-clipper
+pkgver=2.13.0
+pkgrel=1
+_commit=aea5a5b8f460c8a4a36d3cdbf2afbd4fe3ce2297
+pkgdesc='Instant-replay game clip recorder for Linux, for Wayland and X11'
+arch=('any')
+url='https://github.com/splitshotz/Vice'
+license=('GPL-3.0-or-later')
+depends=(
+  'python'
+  'python-evdev'
+  'python-aiohttp'
+  'python-click'
+  'python-tomli-w'
+  'python-psutil'
+  'python-pywebview'
+  'python-pyqt6'
+  'python-pyqt6-webengine'
+  'python-qtpy'
+  'ffmpeg'
+  'gpu-screen-recorder'
+  'wf-recorder'
+  'wl-clipboard'
+  'xclip'
+  'xdotool'
+  'xorg-xprop'
+  'wmctrl'
+  'cloudflared'
+)
+optdepends=('kdotool: active-window detection on KDE Wayland')
+makedepends=('git' 'python-build' 'python-installer' 'python-setuptools' 'python-wheel')
+conflicts=('vice-clipper-bin')
+source=("vice::git+$url.git#commit=$_commit"
+        'vice-clipboard-hang.patch')
+sha256sums=('SKIP'
+            'f6ac30246332978dd12c77e1820c2a9281289467cf84850de85ae8c77e54ff85')
+
+prepare() {
+  cd vice
+  patch -Np1 -i ../vice-clipboard-hang.patch
+}
+
+build() {
+  cd vice
+  python -m build --wheel --no-isolation
+}
+
+package() {
+  cd vice
+  python -m installer --destdir="$pkgdir" dist/*.whl
+  install -Dm644 vice.desktop "$pkgdir/usr/share/applications/vice.desktop"
+  install -Dm644 assets/vice.svg "$pkgdir/usr/share/icons/hicolor/scalable/apps/vice.svg"
+  install -Dm644 packaging/vice.rules "$pkgdir/usr/lib/udev/rules.d/70-vice-input.rules"
+  install -Dm644 packaging/vice.service "$pkgdir/usr/lib/systemd/user/vice.service"
+}

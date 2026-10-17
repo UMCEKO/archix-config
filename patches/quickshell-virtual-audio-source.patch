@@ -1,0 +1,13 @@
+Treat Audio/Source/Virtual PipeWire nodes as audio sources so DMS lists virtual mics such as HUSH's.
+
+--- a/src/services/pipewire/node.cpp
++++ b/src/services/pipewire/node.cpp
+@@ -134,7 +134,7 @@
+ 	if (const auto* mediaClass = spa_dict_lookup(props, SPA_KEY_MEDIA_CLASS)) {
+ 		if (strcmp(mediaClass, "Audio/Sink") == 0) {
+ 			this->type = PwNodeType::AudioSink;
+-		} else if (strcmp(mediaClass, "Audio/Source") == 0) {
++		} else if ((strcmp(mediaClass, "Audio/Source") == 0 || strcmp(mediaClass, "Audio/Source/Virtual") == 0)) {
+ 			this->type = PwNodeType::AudioSource;
+ 		} else if (strcmp(mediaClass, "Audio/Duplex") == 0) {
+ 			this->type = PwNodeType::AudioDuplex;

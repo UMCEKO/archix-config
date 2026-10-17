@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+# git clean filter: drops the keys hosts/*.json override, so settings.json only commits what every host shares
+set -eu
+set -- config/DankMaterialShell/hosts/*.json
+[ -e "$1" ] || exec cat
+keys=$(jq -s 'add | keys' "$@")
+exec jq --argjson k "$keys" 'delpaths([$k[] | [.]])'

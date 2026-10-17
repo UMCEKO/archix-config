@@ -1,0 +1,37 @@
+# Ported from the NixOS config's pkgs/sumac-theme.nix: all three flavours, plus the wallpaper genthemes.sh assembles.
+
+pkgname=sumac-theme
+pkgver=0.20240403
+pkgrel=1
+_commit=2a7641866350a4ced2c96d8e8549584daf446051
+pkgdesc='macOS 12 style theme set for KDE Plasma (Plasma style, Aurorae, Kvantum, colors, icons)'
+arch=('any')
+url='https://github.com/doncsugar/sumac-theme'
+license=('GPL-3.0-only')
+optdepends=('whitesur-icon-theme: the icon packs only inherit from WhiteSur-dark')
+makedepends=('git')
+source=("git+$url.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd "$srcdir/$pkgname"
+  local share="$pkgdir/usr/share"
+  install -d "$share/plasma/desktoptheme" "$share/plasma/look-and-feel" "$share/aurorae/themes" \
+    "$share/color-schemes" "$share/icons" "$share/Kvantum"
+
+  cp -r plasma-styles/*-plasma "$share/plasma/desktoptheme/"
+  cp -r global-themes/org.kde.* "$share/plasma/look-and-feel/"
+  cp -r aurorae/*/* "$share/aurorae/themes/"
+  cp color-schemes/*/*.colors "$share/color-schemes/"
+  cp -r icon-packs/Sumac-* "$share/icons/"
+  cp -r kvantum/* "$share/Kvantum/"
+
+  # Plasma keys the light/dark pair off the images/ vs images_dark/ directory names.
+  local wp="$share/wallpapers/sumac-wallpapers"
+  install -d "$wp/contents/src/images" "$wp/contents/images" "$wp/contents/images_dark"
+  cp wallpaper-themes/sumac-wallpapers/metadata.json "$wp/"
+  cp wallpaper-themes/src/sumac-day-13.svg "$wp/contents/src/images/Sumac Day 13.svg"
+  cp wallpaper-themes/src/sumac-night-13.svg "$wp/contents/src/images/Sumac Night 13.svg"
+  ln -s "../src/images/Sumac Day 13.svg" "$wp/contents/images/6000x6000.svg"
+  ln -s "../src/images/Sumac Night 13.svg" "$wp/contents/images_dark/6000x6000.svg"
+}

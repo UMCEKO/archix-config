@@ -1,0 +1,8 @@
+-- Layer rules.
+--
+-- The old swaync/waybar blur rules were removed with those tools (→ DMS).
+-- DankMaterialShell draws its own layer surfaces under the `dms:*` namespaces
+-- (dms:bar, dms:control-center-*, dms:notification-popup, dms:spotlight, ...)
+-- and does its own wallpaper blur, so no Hyprland layer rules are needed here.
+-- If you want compositor blur on a DMS surface, add e.g.:
+--   hl.layer_rule({ name = "dms-bar-blur", match = { namespace = "dms:bar" }, blur = true })

@@ -1,0 +1,28 @@
+# Ported from the NixOS config's pkgs/liquidglass-widgets.nix.
+
+pkgname=liquidglass-kde-widgets
+pkgver=0.20260803
+pkgrel=1
+_commit=02b4476799c7e3ef22d31b5372dd080a04126921
+pkgdesc='macOS-style Plasma 6 widgets: clocks, weather, calendar, music, timer'
+arch=('any')
+url='https://github.com/jaxparrow07/liquidglass-kde-widgets'
+license=('GPL-3.0-only')
+depends=('plasma-workspace')
+makedepends=('git' 'jq')
+source=("git+$url.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd "$srcdir/$pkgname"
+  local dest="$pkgdir/usr/share/plasma/plasmoids"
+  install -d "$dest"
+  for dir in packages/*/; do
+    # test-* are the author's shader scratchpads, not shippable widgets
+    case "$(basename "$dir")" in test-*) continue ;; esac
+    # installed under KPlugin.Id, which differs from some directory names; -L follows the links into 1-common/
+    local id
+    id=$(jq -er '.KPlugin.Id' "$dir/metadata.json")
+    cp -rL "$dir" "$dest/$id"
+  done
+}

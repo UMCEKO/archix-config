@@ -1,0 +1,8 @@
+# DMS editable clone assets, linked from a per-version checkout by the dms_clone_assets hook
+config/quickshell/dms/assets
+config/quickshell/dms/translations
+config/quickshell/dms/*.pre-symlink
+config/hypr/.dms-backups/
+# per-host link made by the niri_host_config hook
+config/niri/host.kdl
+config/fish/conf.d/uv.env.fish
