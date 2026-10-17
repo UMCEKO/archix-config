@@ -19,4 +19,6 @@ return {
     "hadolint-bin",
     "kube-linter",
   },
+  -- helm-ls 0.5.4's own tests fail against the 2026-10-17 Go toolchain; the binary itself builds fine.
+  aur = { skip_check = { "helm-ls" } },
 }
